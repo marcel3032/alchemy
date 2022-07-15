@@ -1,0 +1,36 @@
+package sk.marcel.alchemy_app
+
+object Constants{
+    val items = mapOf(
+        Pair(1, Item(1, "indium", false)),
+        Pair(2, Item(2, "kábel", false)),
+        Pair(3, Item(3, "kov", false)),
+        Pair(4, Item(4, "kovové piliny", false)),
+        Pair(5, Item(5, "kremík", false)),
+        Pair(6, Item(6, "lyžica", false)),
+        Pair(7, Item(7, "mapa Ázie", false)),
+        Pair(8, Item(8, "meď", false)),
+        Pair(9, Item(9, "okuliare", false)),
+        Pair(10, Item(10, "papier", false)),
+        Pair(11, Item(11, "para", false)),
+        Pair(12, Item(12, "pieskový filter", false)),
+        Pair(13, Item(13, "piesok", false)),
+        Pair(14, Item(14, "plast", false)),
+        Pair(15, Item(15, "plošák", false)),
+        Pair(16, Item(16, "sklo", false)),
+        Pair(17, Item(17, "tuzemský um", false)),
+        Pair(18, Item(18, "vifonka", false)),
+        Pair(19, Item(19, "vlasy", false)),
+        Pair(20, Item(20, "voda", false)),
+        Pair(21, Item(21, "zubná kefka", false)),
+        Pair(32, Item(32, "lepidlo", true)),
+        Pair(33, Item(33, "mikroskop", true)),
+        Pair(34, Item(34, "nožnice", true)),
+        Pair(35, Item(35, "pájkovačka", true)),
+        Pair(36, Item(36, "pilník", true)),
+        Pair(37, Item(37, "šroubovák", true)),
+        Pair(38, Item(38, "štetec", true)),
+        Pair(39, Item(39, "teplo", true)),
+        Pair(40, Item(40, "topánka", true)),
+    )
+}
