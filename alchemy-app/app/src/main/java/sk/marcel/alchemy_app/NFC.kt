@@ -65,25 +65,37 @@ object NFC {
         return out
     }
 
-    fun readAndWriteItems(intent: Intent, bytes: ByteArray): List<Int>?{
+    fun readAndWriteItems(intent: Intent, items: List<Item>): List<Item?>? {
+        val bytes = ByteArray(16)
+        bytes[firstIndex] = items[0].itemId.toByte()
+        bytes[secondIndex] = items[1].itemId.toByte()
+        bytes[thirdIndex] = items[2].itemId.toByte()
+        return readAndWriteItems(intent, bytes)
+    }
+
+    private fun readAndWriteItems(intent: Intent, bytes: ByteArray): List<Item?>?{
         val mfc = getCleanedMfc(intent) ?: return null
-        val result = readItems(intent)
+        val result = readItems(intent, mfc)
         mfc.writeBlock(colorsSector, bytes)
         return result
     }
 
-    fun readItems(intent: Intent): List<Int>?{
-        val mfc = getCleanedMfc(intent) ?: return null
+    fun readItems(intent: Intent, mfc: MifareClassic): List<Item?> {
         val result = ArrayList<Int>()
 
         val bytes = mfc.readBlock(colorsSector)
         result.add(bytes[firstIndex].toInt())
         result.add(bytes[secondIndex].toInt())
         result.add(bytes[thirdIndex].toInt())
-        return result
+        return Item.getItems(result)
     }
 
-    fun readAndRemoveItems(intent: Intent): List<Int>?{
+    fun readItems(intent: Intent): List<Item?>?{
+        val mfc = getCleanedMfc(intent) ?: return null
+        return readItems(intent, mfc)
+    }
+
+    fun readAndRemoveItems(intent: Intent): List<Item?>?{
         return readAndWriteItems(intent, ByteArray(16))
     }
 
