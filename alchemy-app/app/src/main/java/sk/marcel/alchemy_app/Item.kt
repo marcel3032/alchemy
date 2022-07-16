@@ -1,6 +1,6 @@
 package sk.marcel.alchemy_app
 
-class Item (val itemId:Int, val itemName:String, val tool:Boolean){
+data class Item (val itemId:Int, val itemName:String, val tool:Boolean){
     companion object {
         fun getItemById(id:Int): Item? {
             return Constants.items[id]

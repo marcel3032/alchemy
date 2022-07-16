@@ -43,9 +43,14 @@ class MainActivity : AppCompatActivity() {
                     NFC.readAndWriteItems(intent, listOf(Constants.items[first]!!, Constants.items[second]!!, Constants.items[third]!!))
                 } else if(findViewById<CheckBox>(R.id.prenes_z_karty).isChecked) {
                     val toWrite = ArrayList<Item>()
-                    for(view in findViewById<LinearLayout>(R.id.stored_items).allViews)
-                        if(view is CheckBox && view.isChecked)
+                    val chestItems = jsonsHelpers.getChestItems()
+                    for(view in findViewById<LinearLayout>(R.id.stored_items).allViews) {
+                        if (view is CheckBox && view.isChecked) {
                             toWrite.add(Constants.items[checkBoxIdToItemId[view.id]]!!)
+                            chestItems.remove(Constants.items[checkBoxIdToItemId[view.id]]!!)
+                        }
+                    }
+                    jsonsHelpers.writeChestItems(chestItems)
                     NFC.readAndWriteItems(intent, toWrite)
                 } else {
                     NFC.readItems(intent)
