@@ -23,10 +23,10 @@ class JsonsHelpers(activity: MainActivity) {
         }
     }
 
-    fun getItems(items: JSONArray): List<Item>{
+    private fun getItems(items: JSONArray): MutableList<Item>{
         val result = ArrayList<Item>()
         for(i in 0 until items.length()){
-            val item = Constants.items[items.getJSONObject(i).getString("id").toInt()]
+            val item = Constants.items[items.getInt(i)]
             if(item!=null)
                 result.add(item)
             else
@@ -35,21 +35,21 @@ class JsonsHelpers(activity: MainActivity) {
         return result
     }
 
-    fun getChestItems(): List<Item> {
+    fun getChestItems(): MutableList<Item> {
         return getItems(getChestJson())
     }
 
-    fun getKnownItems(): List<Item> {
-        return getItems(getKnownJson())
+    fun getKnownItems(): MutableSet<Item> {
+        return HashSet<Item>(getItems(getKnownJson()))
     }
 
-    fun getChestJson(): JSONArray {
+    private fun getChestJson(): JSONArray {
         BufferedReader(chestFile.reader()).use { reader ->
             return JSONArray(reader.readText())
         }
     }
 
-    fun getKnownJson(): JSONArray {
+    private fun getKnownJson(): JSONArray {
         BufferedReader(knownItemsFile.reader()).use { reader ->
             return JSONArray(reader.readText())
         }
@@ -59,11 +59,11 @@ class JsonsHelpers(activity: MainActivity) {
         chestFile.writeText(getItemsString(items))
     }
 
-    fun writeKnownItems(items: List<Item>){
-        knownItemsFile.writeText(getItemsString(items))
+    fun writeKnownItems(items: Set<Item>){
+        knownItemsFile.writeText(getItemsString(ArrayList<Item>(items)))
     }
 
-    fun getItemsString(items: List<Item>):String{
+    private fun getItemsString(items: List<Item>):String{
         val jsonToWrite = JSONArray()
         for(item in items){
             jsonToWrite.put(item.itemId)

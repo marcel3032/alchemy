@@ -17,10 +17,6 @@ object NFC {
     private const val colorsSector = 10
     private const val sectorSize = 16
 
-    private const val firstIndex = 0
-    private const val secondIndex = 1
-    private const val thirdIndex = 2
-
     private val key: ByteArray = MifareClassic.KEY_DEFAULT
 
     private const val wop: Byte = 0xCD.toByte()
@@ -67,9 +63,8 @@ object NFC {
 
     fun readAndWriteItems(intent: Intent, items: List<Item>): List<Item?>? {
         val bytes = ByteArray(16)
-        bytes[firstIndex] = items[0].itemId.toByte()
-        bytes[secondIndex] = items[1].itemId.toByte()
-        bytes[thirdIndex] = items[2].itemId.toByte()
+        for(i in 0 until minOf(3, items.size))
+            bytes[i] = items[i].itemId.toByte()
         return readAndWriteItems(intent, bytes)
     }
 
@@ -84,9 +79,8 @@ object NFC {
         val result = ArrayList<Int>()
 
         val bytes = mfc.readBlock(colorsSector)
-        result.add(bytes[firstIndex].toInt())
-        result.add(bytes[secondIndex].toInt())
-        result.add(bytes[thirdIndex].toInt())
+        for(i in 0 until 3)
+            result.add(bytes[i].toInt())
         return Item.getItems(result)
     }
 
