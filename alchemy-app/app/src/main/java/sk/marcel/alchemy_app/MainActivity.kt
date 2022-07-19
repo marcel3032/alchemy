@@ -1,5 +1,6 @@
 package sk.marcel.alchemy_app
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.media.MediaPlayer
 import android.nfc.NfcAdapter
@@ -7,7 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.allViews
+import cn.pedant.SweetAlert.SweetAlertDialog
 
 class MainActivity : AppCompatActivity() {
     private var mNfcAdapter: NfcAdapter? = null
@@ -20,7 +23,8 @@ class MainActivity : AppCompatActivity() {
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this)
         jsonsHelpers = JsonsHelpers(this)
         displayChest()
-        displayKnown()
+        findViewById<Button>(R.id.delete_selected).setOnClickListener { deleteSelectedItems() }
+        findViewById<Button>(R.id.known_items).setOnClickListener { startActivity(Intent(this, KnownItemsActivity::class.java)) }
     }
 
     override fun onResume() {
@@ -76,9 +80,11 @@ class MainActivity : AppCompatActivity() {
                     jsonsHelpers.writeChestItems(chestItems)
                     jsonsHelpers.writeKnownItems(knownItems)
 
-                    findViewById<TextView>(R.id.result).text = stringBuilder
+                    val alertDialog = SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
+                        .setTitleText("Načítaná karta")
+                        .setContentText("Na karte: $stringBuilder")
+                    alertDialog?.show()
                     displayChest()
-                    displayKnown()
 
                     playSound(R.raw.ack)
                 } else {
@@ -114,14 +120,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun displayKnown(){
-        findViewById<LinearLayout>(R.id.known_items).removeAllViews()
-        val knownItems = jsonsHelpers.getKnownItems()
-        for(item in knownItems){
-            val text = TextView(this)
-            text.text = item.itemName
-            findViewById<LinearLayout>(R.id.known_items).addView(text)
-        }
-
+    private fun deleteSelectedItems(){
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage("Delete selected items?")
+            .setPositiveButton("Yes") { _: DialogInterface?, _: Int ->
+                val chestItems = jsonsHelpers.getChestItems()
+                for(view in findViewById<LinearLayout>(R.id.stored_items).allViews)
+                    if (view is CheckBox && view.isChecked)
+                        chestItems.remove(Constants.items[checkBoxIdToItemId[view.id]]!!)
+                jsonsHelpers.writeChestItems(chestItems)
+                displayChest()
+            }
+            .setNegativeButton("Cancel") { dialog: DialogInterface, _: Int -> dialog.cancel() }
+        val alert = builder.create()
+        alert.show()
     }
 }

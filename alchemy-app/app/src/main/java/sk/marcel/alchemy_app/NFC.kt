@@ -78,6 +78,8 @@ object NFC {
     fun readItems(intent: Intent, mfc: MifareClassic): List<Item?> {
         val result = ArrayList<Int>()
 
+        // TODO also read recent recipes and reset them
+
         val bytes = mfc.readBlock(colorsSector)
         for(i in 0 until 3)
             result.add(bytes[i].toInt())

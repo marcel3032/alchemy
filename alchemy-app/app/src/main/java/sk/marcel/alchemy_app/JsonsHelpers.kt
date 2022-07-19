@@ -1,5 +1,7 @@
 package sk.marcel.alchemy_app
 
+import android.app.Activity
+import android.content.Context
 import android.util.Log
 import org.json.JSONArray
 import java.io.BufferedReader
@@ -7,19 +9,19 @@ import java.io.File
 import java.sql.Time
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
 
-class JsonsHelpers(activity: MainActivity) {
+class JsonsHelpers(activity: Context) {
     private var chestFile: File = File(activity.filesDir.absolutePath, "chest.json")
     private var knownItemsFile: File = File(activity.filesDir.absolutePath, "known-items.json")
+    private var knownRecipesFile: File = File(activity.filesDir.absolutePath, "known-recipes.json")
 
     init {
-        if(!chestFile.exists()) {
-            chestFile.createNewFile()
-            chestFile.writeText("[]")
-        }
-        if(!knownItemsFile.exists()) {
-            knownItemsFile.createNewFile()
-            knownItemsFile.writeText("[]")
+        for(file in listOf(chestFile, knownItemsFile, knownRecipesFile)) {
+            if (!file.exists()) {
+                file.createNewFile()
+                file.writeText("[]")
+            }
         }
     }
 
@@ -43,6 +45,14 @@ class JsonsHelpers(activity: MainActivity) {
         return HashSet<Item>(getItems(getKnownJson()))
     }
 
+    fun getKnownRecipes(): MutableSet<Int> {
+        val recipes = getRecipesJson()
+        val result = HashSet<Int>()
+        for(i in 0 until recipes.length())
+            result.add(recipes.getInt(i))
+        return result
+    }
+
     private fun getChestJson(): JSONArray {
         BufferedReader(chestFile.reader()).use { reader ->
             return JSONArray(reader.readText())
@@ -51,6 +61,12 @@ class JsonsHelpers(activity: MainActivity) {
 
     private fun getKnownJson(): JSONArray {
         BufferedReader(knownItemsFile.reader()).use { reader ->
+            return JSONArray(reader.readText())
+        }
+    }
+
+    private fun getRecipesJson(): JSONArray {
+        BufferedReader(knownRecipesFile.reader()).use { reader ->
             return JSONArray(reader.readText())
         }
     }
@@ -69,5 +85,13 @@ class JsonsHelpers(activity: MainActivity) {
             jsonToWrite.put(item.itemId)
         }
         return jsonToWrite.toString()
+    }
+
+    fun getAllRecipesCount(item: Item): Int {
+        return Constants.recipes.values.count { recipe -> recipe.items.contains(item) }
+    }
+
+    fun getKnownRecipesCount(itemId: Int): Int {
+        return 2 //TODO get known recipes from known recipes book
     }
 }
