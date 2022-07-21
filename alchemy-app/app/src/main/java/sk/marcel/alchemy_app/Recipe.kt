@@ -5,5 +5,12 @@ data class Recipe (val recipeId:Int, val items:Set<Item>, val result: Item){
         fun getRecipeById(id:Int): Recipe? {
             return Constants.recipes[id]
         }
+        fun getRecipes(ids:List<Int>): List<Recipe>{
+            val result = ArrayList<Recipe>()
+            for(id in ids){
+                getRecipeById(id)?.let { result.add(it) }
+            }
+            return result
+        }
     }
 }

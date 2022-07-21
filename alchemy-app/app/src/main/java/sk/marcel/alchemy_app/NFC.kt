@@ -14,8 +14,10 @@ import java.io.IOException
 import java.nio.ByteBuffer
 
 object NFC {
-    private const val colorsSector = 10
+    private const val itemsSector = 10
+    private const val recipesSector = 9
     private const val sectorSize = 16
+    private const val maxItemsOnCard = 3
 
     private val key: ByteArray = MifareClassic.KEY_DEFAULT
 
@@ -61,37 +63,42 @@ object NFC {
         return out
     }
 
-    fun readAndWriteItems(intent: Intent, items: List<Item>): List<Item?>? {
+    fun readAndWriteItems(intent: Intent, items: List<Item>): Pair<List<Item?>, List<Recipe>>? {
         val bytes = ByteArray(16)
-        for(i in 0 until minOf(3, items.size))
+        for(i in 0 until minOf(maxItemsOnCard, items.size))
             bytes[i] = items[i].itemId.toByte()
         return readAndWriteItems(intent, bytes)
     }
 
-    private fun readAndWriteItems(intent: Intent, bytes: ByteArray): List<Item?>?{
+    private fun readAndWriteItems(intent: Intent, bytes: ByteArray): Pair<List<Item?>, List<Recipe>>?{
         val mfc = getCleanedMfc(intent) ?: return null
         val result = readItems(intent, mfc)
-        mfc.writeBlock(colorsSector, bytes)
+        mfc.writeBlock(itemsSector, bytes)
         return result
     }
 
-    fun readItems(intent: Intent, mfc: MifareClassic): List<Item?> {
-        val result = ArrayList<Int>()
+    fun readItems(intent: Intent, mfc: MifareClassic): Pair<List<Item?>, List<Recipe>> {
+        val itemInts = ArrayList<Int>()
+        val recipeInts = ArrayList<Int>()
 
-        // TODO also read recent recipes and reset them
+        val recipesBytes = mfc.readBlock(recipesSector)
+        mfc.writeBlock(recipesSector, ByteArray(16))
+        val itemsBytes = mfc.readBlock(itemsSector)
 
-        val bytes = mfc.readBlock(colorsSector)
-        for(i in 0 until 3)
-            result.add(bytes[i].toInt())
-        return Item.getItems(result)
+        for(i in 0 until sectorSize)
+            recipeInts.add(recipesBytes[i].toInt())
+        for(i in 0 until maxItemsOnCard)
+            itemInts.add(itemsBytes[i].toInt())
+
+        return Pair(Item.getItems(itemInts), Recipe.getRecipes(recipeInts))
     }
 
-    fun readItems(intent: Intent): List<Item?>?{
+    fun readItems(intent: Intent): Pair<List<Item?>, List<Recipe>>?{
         val mfc = getCleanedMfc(intent) ?: return null
         return readItems(intent, mfc)
     }
 
-    fun readAndRemoveItems(intent: Intent): List<Item?>?{
+    fun readAndRemoveItems(intent: Intent): Pair<List<Item?>, List<Recipe>>?{
         return readAndWriteItems(intent, ByteArray(16))
     }
 
@@ -100,7 +107,7 @@ object NFC {
         val myTag: Tag? = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG) as Tag?
         try {
             mfc.connect()
-            val auth: Boolean = mfc.authenticateSectorWithKeyB(mfc.blockToSector(colorsSector), key)
+            val auth: Boolean = mfc.authenticateSectorWithKeyB(mfc.blockToSector(itemsSector), key)
             if (auth) {
                 return mfc
             } else {

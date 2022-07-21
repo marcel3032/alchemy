@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
         displayChest()
         findViewById<Button>(R.id.delete_selected).setOnClickListener { deleteSelectedItems() }
         findViewById<Button>(R.id.known_items).setOnClickListener { startActivity(Intent(this, KnownItemsActivity::class.java)) }
+        findViewById<Button>(R.id.reset_files).setOnClickListener { resetProgress() }
     }
 
     override fun onResume() {
@@ -40,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         if(intent!=null) {
             if (NfcAdapter.ACTION_NDEF_DISCOVERED == intent.action || NfcAdapter.ACTION_TAG_DISCOVERED == intent.action || NfcAdapter.ACTION_TECH_DISCOVERED == intent.action) {
 
-                val res: List<Item?>? = if(findViewById<CheckBox>(R.id.pridaj_na_kartu).isChecked) {
+                val res: Pair<List<Item?>, List<Recipe>>? = if(findViewById<CheckBox>(R.id.pridaj_na_kartu).isChecked) {
                     val first = Integer.parseInt(findViewById<EditText>(R.id.first).text.toString())
                     val second = Integer.parseInt(findViewById<EditText>(R.id.second).text.toString())
                     val third = Integer.parseInt(findViewById<EditText>(R.id.third).text.toString())
@@ -61,11 +62,14 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 if(res!=null) {
-                    Toast.makeText(this, "OK", Toast.LENGTH_LONG).show()
+                    val knownRecipes = jsonsHelpers.getKnownRecipes()
+                    for(recipe in res.second)
+                        knownRecipes.add(recipe.recipeId)
+                    jsonsHelpers.writeKnownRecipes(knownRecipes)
                     val chestItems = jsonsHelpers.getChestItems()
                     val knownItems = jsonsHelpers.getKnownItems()
                     val stringBuilder = StringBuilder()
-                    for(item in res) {
+                    for(item in res.first) {
                         if (item != null) {
                             stringBuilder.append(item.itemName).append(", ")
                             if(findViewById<CheckBox>(R.id.prenes_z_karty).isChecked){
@@ -80,7 +84,7 @@ class MainActivity : AppCompatActivity() {
                     jsonsHelpers.writeChestItems(chestItems)
                     jsonsHelpers.writeKnownItems(knownItems)
 
-                    val alertDialog = SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
+                    val alertDialog = SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
                         .setTitleText("Načítaná karta")
                         .setContentText("Na karte: $stringBuilder")
                     alertDialog?.show()
@@ -88,7 +92,9 @@ class MainActivity : AppCompatActivity() {
 
                     playSound(R.raw.ack)
                 } else {
-                    Toast.makeText(this, "reading failed", Toast.LENGTH_LONG).show()
+                    val alertDialog = SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText("Chyba pri čítaní karty")
+                    alertDialog?.show()
                     playSound(R.raw.error)
                 }
             }
@@ -129,6 +135,18 @@ class MainActivity : AppCompatActivity() {
                     if (view is CheckBox && view.isChecked)
                         chestItems.remove(Constants.items[checkBoxIdToItemId[view.id]]!!)
                 jsonsHelpers.writeChestItems(chestItems)
+                displayChest()
+            }
+            .setNegativeButton("Cancel") { dialog: DialogInterface, _: Int -> dialog.cancel() }
+        val alert = builder.create()
+        alert.show()
+    }
+
+    private fun resetProgress(){
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage("Reset game progress?")
+            .setPositiveButton("Yes") { _: DialogInterface?, _: Int ->
+                jsonsHelpers.resetFiles()
                 displayChest()
             }
             .setNegativeButton("Cancel") { dialog: DialogInterface, _: Int -> dialog.cancel() }

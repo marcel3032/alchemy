@@ -1,15 +1,10 @@
 package sk.marcel.alchemy_app
 
-import android.app.Activity
 import android.content.Context
 import android.util.Log
 import org.json.JSONArray
 import java.io.BufferedReader
 import java.io.File
-import java.sql.Time
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashSet
 
 class JsonsHelpers(activity: Context) {
     private var chestFile: File = File(activity.filesDir.absolutePath, "chest.json")
@@ -22,6 +17,13 @@ class JsonsHelpers(activity: Context) {
                 file.createNewFile()
                 file.writeText("[]")
             }
+        }
+    }
+
+    fun resetFiles(){
+        for(file in listOf(chestFile, knownItemsFile, knownRecipesFile)) {
+            file.createNewFile()
+            file.writeText("[]")
         }
     }
 
@@ -42,7 +44,7 @@ class JsonsHelpers(activity: Context) {
     }
 
     fun getKnownItems(): MutableSet<Item> {
-        return HashSet<Item>(getItems(getKnownJson()))
+        return HashSet(getItems(getKnownJson()))
     }
 
     fun getKnownRecipes(): MutableSet<Int> {
@@ -87,11 +89,21 @@ class JsonsHelpers(activity: Context) {
         return jsonToWrite.toString()
     }
 
+    fun writeKnownRecipes(recipes: MutableSet<Int>){
+        val jsonToWrite = JSONArray()
+        for(recipe in recipes){
+            jsonToWrite.put(recipe)
+        }
+        knownRecipesFile.writeText(jsonToWrite.toString())
+    }
+
     fun getAllRecipesCount(item: Item): Int {
         return Constants.recipes.values.count { recipe -> recipe.items.contains(item) }
     }
 
     fun getKnownRecipesCount(itemId: Int): Int {
-        return 2 //TODO get known recipes from known recipes book
+        return Recipe.getRecipes(ArrayList(getKnownRecipes())).count { recipe -> recipe.items.map { item -> item.itemId }.contains(itemId) }
     }
+
+
 }

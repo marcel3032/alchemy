@@ -15,7 +15,10 @@ class KnownItemAdapter(private val knownItemsActivity: KnownItemsActivity, priva
         if (v == null) {
             v = LayoutInflater.from(knownItemsActivity).inflate(resourceLayout, parent, false)
         }
-        val name = v!!.findViewById<TextView>(R.id.item_name)
+        v!!.setOnClickListener {
+            // TODO display known recipes
+        }
+        val name = v.findViewById<TextView>(R.id.item_name)
         val image = v.findViewById<ImageView>(R.id.item_image)
         val progressText = v.findViewById<TextView>(R.id.progress_text)
         val progressBar = v.findViewById<ProgressBar>(R.id.progress_bar)
@@ -27,7 +30,8 @@ class KnownItemAdapter(private val knownItemsActivity: KnownItemsActivity, priva
             val allRecipesCount = knownItemsActivity.jsonsHelpers.getAllRecipesCount(item)
             if(allRecipesCount!=0)
                 progressBar.progress = 100*knownItemsActivity.jsonsHelpers.getKnownRecipesCount(item.itemId)/allRecipesCount
-            progressBar.progress = 100
+            else
+                progressBar.progress = 100
         }
         return v
     }
