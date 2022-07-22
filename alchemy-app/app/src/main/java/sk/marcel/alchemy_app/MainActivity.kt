@@ -14,7 +14,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog
 
 class MainActivity : AppCompatActivity() {
     private var mNfcAdapter: NfcAdapter? = null
-    private lateinit var jsonsHelpers: JsonsHelpers
+    lateinit var jsonsHelpers: JsonsHelpers
     private val checkBoxIdToItemId = HashMap<Int, Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -115,15 +115,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun displayChest(){
-        findViewById<LinearLayout>(R.id.stored_items).removeAllViews()
-        val chestItems = jsonsHelpers.getChestItems()
-        for(item in chestItems){
-            val text = CheckBox(this)
-            text.id = View.generateViewId()
-            checkBoxIdToItemId[text.id] = item.itemId
-            text.text = item.itemName
-            findViewById<LinearLayout>(R.id.stored_items).addView(text)
-        }
+        val adapter = ChestItemAdapter(this, R.layout.chest_item_layout, jsonsHelpers.getChestItems())
+        findViewById<ListView>(R.id.stored_items).adapter = adapter
     }
 
     private fun deleteSelectedItems(){
@@ -131,9 +124,12 @@ class MainActivity : AppCompatActivity() {
         builder.setMessage("Delete selected items?")
             .setPositiveButton("Yes") { _: DialogInterface?, _: Int ->
                 val chestItems = jsonsHelpers.getChestItems()
-                for(view in findViewById<LinearLayout>(R.id.stored_items).allViews)
-                    if (view is CheckBox && view.isChecked)
-                        chestItems.remove(Constants.items[checkBoxIdToItemId[view.id]]!!)
+                val chestItemAdapter = findViewById<ListView>(R.id.stored_items).adapter as ChestItemAdapter
+
+                for(i in chestItemAdapter.itemChecked.indices.reversed())
+                    if(chestItemAdapter.itemChecked[i])
+                        chestItems.removeAt(i)
+
                 jsonsHelpers.writeChestItems(chestItems)
                 displayChest()
             }

@@ -15,7 +15,7 @@ class KnownItemsActivity : AppCompatActivity() {
     }
 
     private fun displayKnown(){
-        val adapter = KnownItemAdapter(this, R.layout.item_layout, ArrayList(jsonsHelpers.getKnownItems()))
+        val adapter = KnownItemAdapter(this, R.layout.known_item_layout, ArrayList(jsonsHelpers.getKnownItems()))
         findViewById<ListView>(R.id.known_items).adapter = adapter
     }
 }
