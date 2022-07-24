@@ -1,6 +1,6 @@
 package sk.marcel.alchemy_app
 
-data class Item (val itemId:Int, val itemName:String, val tool:Boolean){
+data class Item (val itemId:Int, val itemName:String, val tool:Boolean):Comparable<Item>{
     companion object {
         fun getItemById(id:Int): Item? {
             return Constants.items[id]
@@ -14,5 +14,9 @@ data class Item (val itemId:Int, val itemName:String, val tool:Boolean){
             }
             return result
         }
+    }
+
+    override fun compareTo(other: Item): Int {
+        return itemName.compareTo(other.itemName)
     }
 }

@@ -36,6 +36,7 @@ class JsonsHelpers(activity: Context) {
             else
                 Log.e("alchemy-app", "WTF, take id nie je")
         }
+        result.sort()
         return result
     }
 
@@ -43,15 +44,16 @@ class JsonsHelpers(activity: Context) {
         return getItems(getChestJson())
     }
 
-    fun getKnownItems(): MutableSet<Item> {
-        return HashSet(getItems(getKnownJson()))
+    fun getKnownItems(): MutableList<Item> {
+        return getItems(getKnownJson())
     }
 
-    fun getKnownRecipes(): MutableSet<Int> {
+    fun getKnownRecipes(): MutableList<Int> {
         val recipes = getRecipesJson()
-        val result = HashSet<Int>()
+        val result = ArrayList<Int>()
         for(i in 0 until recipes.length())
             result.add(recipes.getInt(i))
+        result.sort()
         return result
     }
 
@@ -74,24 +76,24 @@ class JsonsHelpers(activity: Context) {
     }
 
     fun writeChestItems(items: List<Item>){
-        chestFile.writeText(getItemsString(items))
+        chestFile.writeText(getItemsString(items.sorted()))
     }
 
-    fun writeKnownItems(items: Set<Item>){
-        knownItemsFile.writeText(getItemsString(ArrayList<Item>(items)))
+    fun writeKnownItems(items: List<Item>){
+        knownItemsFile.writeText(getItemsString(items.sorted()))
     }
 
     private fun getItemsString(items: List<Item>):String{
         val jsonToWrite = JSONArray()
-        for(item in items){
+        for(item in items.sorted()){
             jsonToWrite.put(item.itemId)
         }
         return jsonToWrite.toString()
     }
 
-    fun writeKnownRecipes(recipes: MutableSet<Int>){
+    fun writeKnownRecipes(recipes: MutableList<Int>){
         val jsonToWrite = JSONArray()
-        for(recipe in recipes){
+        for(recipe in recipes.sorted()){
             jsonToWrite.put(recipe)
         }
         knownRecipesFile.writeText(jsonToWrite.toString())

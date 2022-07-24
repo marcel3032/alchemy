@@ -16,7 +16,6 @@ import cn.pedant.SweetAlert.SweetAlertDialog
 class MainActivity : AppCompatActivity() {
     private var mNfcAdapter: NfcAdapter? = null
     lateinit var jsonsHelpers: JsonsHelpers
-    private val checkBoxIdToItemId = HashMap<Int, Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
