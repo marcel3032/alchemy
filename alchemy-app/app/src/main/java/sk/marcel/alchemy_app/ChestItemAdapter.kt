@@ -1,5 +1,6 @@
 package sk.marcel.alchemy_app
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,6 +42,10 @@ class ChestItemAdapter(private val mainActivity: MainActivity, private val resou
         val item: Item? = getItem(position)
         if (item != null) {
             name.text = item.itemName
+            if(item.tool)
+                name.setTextColor(Color.parseColor("#06ad00"))
+            else
+                name.setTextColor(Color.parseColor("#000a91"))
             image.setImageDrawable(mainActivity.getDrawable(com.pnikosis.materialishprogress.R.drawable.abc_btn_radio_material))
         }
         return v

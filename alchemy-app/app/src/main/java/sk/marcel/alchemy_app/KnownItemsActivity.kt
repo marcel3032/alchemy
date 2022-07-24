@@ -1,7 +1,9 @@
 package sk.marcel.alchemy_app
 
 import android.os.Bundle
+import android.widget.ImageButton
 import android.widget.ListView
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 
 class KnownItemsActivity : AppCompatActivity() {
@@ -12,6 +14,7 @@ class KnownItemsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_known_items)
         jsonsHelpers = JsonsHelpers(this)
         displayKnown()
+        findViewById<ImageButton>(R.id.back_button).setOnClickListener { finish() }
     }
 
     private fun displayKnown(){
