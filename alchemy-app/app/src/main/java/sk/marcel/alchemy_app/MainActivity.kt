@@ -4,12 +4,13 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.media.MediaPlayer
 import android.nfc.NfcAdapter
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.ListView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.allViews
+import androidx.appcompat.app.AppCompatActivity
 import cn.pedant.SweetAlert.SweetAlertDialog
 
 class MainActivity : AppCompatActivity() {
@@ -41,24 +42,29 @@ class MainActivity : AppCompatActivity() {
         if(intent!=null) {
             if (NfcAdapter.ACTION_NDEF_DISCOVERED == intent.action || NfcAdapter.ACTION_TAG_DISCOVERED == intent.action || NfcAdapter.ACTION_TECH_DISCOVERED == intent.action) {
 
-                val res: Pair<List<Item?>, List<Recipe>>? = if(findViewById<CheckBox>(R.id.pridaj_na_kartu).isChecked) {
+                val res: Pair<List<Item?>?, List<Recipe>>?
+                if(findViewById<CheckBox>(R.id.pridaj_na_kartu).isChecked) {
                     val first = Integer.parseInt(findViewById<EditText>(R.id.first).text.toString())
                     val second = Integer.parseInt(findViewById<EditText>(R.id.second).text.toString())
                     val third = Integer.parseInt(findViewById<EditText>(R.id.third).text.toString())
-                    NFC.readAndWriteItems(intent, listOf(Constants.items[first]!!, Constants.items[second]!!, Constants.items[third]!!))
-                } else if(findViewById<CheckBox>(R.id.prenes_z_karty).isChecked) {
+                    res = NFC.readAndWriteItems(intent, listOf(Constants.items[first]!!, Constants.items[second]!!, Constants.items[third]!!), Int.MAX_VALUE)
+                } else if(findViewById<CheckBox>(R.id.rw_z_karty).isChecked) {
                     val toWrite = ArrayList<Item>()
                     val chestItems = jsonsHelpers.getChestItems()
-                    for(view in findViewById<LinearLayout>(R.id.stored_items).allViews) {
-                        if (view is CheckBox && view.isChecked) {
-                            toWrite.add(Constants.items[checkBoxIdToItemId[view.id]]!!)
-                            chestItems.remove(Constants.items[checkBoxIdToItemId[view.id]]!!)
+                    val chestItemAdapter = findViewById<ListView>(R.id.stored_items).adapter as ChestItemAdapter
+
+                    for(i in chestItemAdapter.itemChecked.indices.reversed()) {
+                        if (chestItemAdapter.itemChecked[i]) {
+                            toWrite.add(chestItems[i])
+                            chestItems.remove(chestItems[i])
                         }
                     }
-                    jsonsHelpers.writeChestItems(chestItems)
-                    NFC.readAndWriteItems(intent, toWrite)
+
+                    res = NFC.readAndWriteItems(intent, toWrite, Constants.MAX_ITEMS_IN_CHEST - chestItems.size)
+                    if(res?.first !=null)
+                        jsonsHelpers.writeChestItems(chestItems)
                 } else {
-                    NFC.readItems(intent)
+                    res = NFC.readItems(intent, Int.MAX_VALUE)
                 }
 
                 if(res!=null) {
@@ -69,32 +75,41 @@ class MainActivity : AppCompatActivity() {
                     val chestItems = jsonsHelpers.getChestItems()
                     val knownItems = jsonsHelpers.getKnownItems()
                     val stringBuilder = StringBuilder()
-                    for(item in res.first) {
-                        if (item != null) {
-                            stringBuilder.append(item.itemName).append(", ")
-                            if(findViewById<CheckBox>(R.id.prenes_z_karty).isChecked){
-                                chestItems.add(item)
+                    if(res.first!=null) {
+                        for (item in res.first!!) {
+                            if (item != null) {
+                                stringBuilder.append(item.itemName).append(", ")
+                                if (findViewById<CheckBox>(R.id.rw_z_karty).isChecked)
+                                    chestItems.add(item)
                                 knownItems.add(item)
-                            }
+                            } else
+                                stringBuilder.append("nic, ")
                         }
-                        else
-                            stringBuilder.append("nic, ")
+                        jsonsHelpers.writeChestItems(chestItems)
+                        jsonsHelpers.writeKnownItems(knownItems)
+
+                        SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                            .setTitleText("Načítaná karta")
+                            .setContentText("$stringBuilder")
+                            .show()
+
+                        playSound(R.raw.ack)
+                        displayChest()
+                    } else {
+                        SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Načítaná karta")
+                            .setContentText("Prenosom by bola prekročená kapacita")
+                            .show()
+
+                        playSound(R.raw.error)
+                        displayChest()
                     }
 
-                    jsonsHelpers.writeChestItems(chestItems)
-                    jsonsHelpers.writeKnownItems(knownItems)
-
-                    val alertDialog = SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-                        .setTitleText("Načítaná karta")
-                        .setContentText("Na karte: $stringBuilder")
-                    alertDialog?.show()
-                    displayChest()
-
-                    playSound(R.raw.ack)
                 } else {
-                    val alertDialog = SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                    SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                         .setTitleText("Chyba pri čítaní karty")
-                    alertDialog?.show()
+                        .show()
+
                     playSound(R.raw.error)
                 }
             }

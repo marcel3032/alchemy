@@ -8,7 +8,9 @@ data class Item (val itemId:Int, val itemName:String, val tool:Boolean){
         fun getItems(ids:List<Int>): List<Item?>{
             val result = ArrayList<Item?>()
             for(id in ids){
-                result.add(getItemById(id))
+                val item = getItemById(id)
+                if(item!=null)
+                result.add(item)
             }
             return result
         }

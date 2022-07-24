@@ -24,9 +24,17 @@ class ChestItemAdapter(private val mainActivity: MainActivity, private val resou
         v.setOnClickListener {
             marker.isChecked = !marker.isChecked
             itemChecked[position] = marker.isChecked
+            if(itemChecked.count{ it } > Constants.maxItemsOnCard){
+                marker.isChecked = false
+                itemChecked[position] = false
+            }
         }
         marker.setOnCheckedChangeListener { _, b ->
             itemChecked[position] = b
+            if(itemChecked.count{ it } > Constants.maxItemsOnCard){
+                marker.isChecked = false
+                itemChecked[position] = false
+            }
         }
         val name = v.findViewById<TextView>(R.id.item_name)
         val image = v.findViewById<ImageView>(R.id.item_image)

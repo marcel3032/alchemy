@@ -20,15 +20,15 @@
             android:id="@+id/delete_selected"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:text="Delete selected items"/>
+            android:layout_margin="1dp"
+            android:text="Delete selected"/>
 
         <Button
             android:layout_weight="1"
             android:id="@+id/known_items"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_margin="1dp"
             android:text="Known items"/>
 
     </LinearLayout>
@@ -46,7 +46,7 @@
         android:orientation="vertical" />
 
     <CheckBox
-        android:id="@+id/prenes_z_karty"
+        android:id="@+id/rw_z_karty"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

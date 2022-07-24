@@ -17,7 +17,6 @@ object NFC {
     private const val itemsSector = 10
     private const val recipesSector = 9
     private const val sectorSize = 16
-    private const val maxItemsOnCard = 3
 
     private val key: ByteArray = MifareClassic.KEY_DEFAULT
 
@@ -63,21 +62,22 @@ object NFC {
         return out
     }
 
-    fun readAndWriteItems(intent: Intent, items: List<Item>): Pair<List<Item?>, List<Recipe>>? {
+    fun readAndWriteItems(intent: Intent, items: List<Item>, limit: Int): Pair<List<Item?>?, List<Recipe>>? {
         val bytes = ByteArray(16)
-        for(i in 0 until minOf(maxItemsOnCard, items.size))
+        for(i in 0 until minOf(Constants.maxItemsOnCard, items.size))
             bytes[i] = items[i].itemId.toByte()
-        return readAndWriteItems(intent, bytes)
+        return readAndWriteItems(intent, bytes, limit)
     }
 
-    private fun readAndWriteItems(intent: Intent, bytes: ByteArray): Pair<List<Item?>, List<Recipe>>?{
+    private fun readAndWriteItems(intent: Intent, bytes: ByteArray, limit: Int): Pair<List<Item?>?, List<Recipe>>?{
         val mfc = getCleanedMfc(intent) ?: return null
-        val result = readItems(intent, mfc)
-        mfc.writeBlock(itemsSector, bytes)
+        val result = readItems(intent, mfc, limit)
+        if(result.first!=null)
+            mfc.writeBlock(itemsSector, bytes)
         return result
     }
 
-    fun readItems(intent: Intent, mfc: MifareClassic): Pair<List<Item?>, List<Recipe>> {
+    fun readItems(intent: Intent, mfc: MifareClassic, limit: Int): Pair<List<Item?>?, List<Recipe>> {
         val itemInts = ArrayList<Int>()
         val recipeInts = ArrayList<Int>()
 
@@ -87,19 +87,21 @@ object NFC {
 
         for(i in 0 until sectorSize)
             recipeInts.add(recipesBytes[i].toInt())
-        for(i in 0 until maxItemsOnCard)
+        for(i in 0 until Constants.maxItemsOnCard)
             itemInts.add(itemsBytes[i].toInt())
 
+        if(Item.getItems(itemInts).size>limit)
+            return Pair(null, Recipe.getRecipes(recipeInts))
         return Pair(Item.getItems(itemInts), Recipe.getRecipes(recipeInts))
     }
 
-    fun readItems(intent: Intent): Pair<List<Item?>, List<Recipe>>?{
+    fun readItems(intent: Intent, limit: Int): Pair<List<Item?>?, List<Recipe>>?{
         val mfc = getCleanedMfc(intent) ?: return null
-        return readItems(intent, mfc)
+        return readItems(intent, mfc, limit)
     }
 
-    fun readAndRemoveItems(intent: Intent): Pair<List<Item?>, List<Recipe>>?{
-        return readAndWriteItems(intent, ByteArray(16))
+    fun readAndRemoveItems(intent: Intent): Pair<List<Item?>?, List<Recipe>>?{
+        return readAndWriteItems(intent, ByteArray(16), Int.MAX_VALUE)
     }
 
     private fun getCleanedMfc(intent: Intent): MifareClassic?{

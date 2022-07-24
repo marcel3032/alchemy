@@ -68,4 +68,8 @@ object Constants{
     val recipes = mapOf(
         Pair(1, Recipe(1, setOf(pajkovacka, kabel, kov), piliny))
     )
+
+    const val MAX_ITEMS_IN_CHEST = 5
+    const val maxItemsOnCard = 3
+
 }
