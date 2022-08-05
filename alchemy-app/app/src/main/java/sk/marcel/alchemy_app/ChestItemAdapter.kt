@@ -46,7 +46,7 @@ class ChestItemAdapter(private val mainActivity: MainActivity, private val resou
                 name.setTextColor(Color.parseColor("#06ad00"))
             else
                 name.setTextColor(Color.parseColor("#000a91"))
-            image.setImageDrawable(mainActivity.getDrawable(com.pnikosis.materialishprogress.R.drawable.abc_btn_radio_material))
+            image.setImageDrawable(mainActivity.getDrawable(item.drawableId))
         }
         return v
     }

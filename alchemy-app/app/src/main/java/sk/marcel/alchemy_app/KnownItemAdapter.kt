@@ -1,5 +1,6 @@
 package sk.marcel.alchemy_app
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +26,11 @@ class KnownItemAdapter(private val knownItemsActivity: KnownItemsActivity, priva
         val item: Item? = getItem(position)
         if (item != null) {
             name.text = item.itemName
-            image.setImageDrawable(knownItemsActivity.getDrawable(com.pnikosis.materialishprogress.R.drawable.abc_btn_radio_material))
+            if(item.tool)
+                name.setTextColor(Color.parseColor("#06ad00"))
+            else
+                name.setTextColor(Color.parseColor("#000a91"))
+            image.setImageDrawable(knownItemsActivity.getDrawable(item.drawableId))
             progressText.text = "${knownItemsActivity.jsonsHelpers.getKnownRecipesCount(item.itemId)}/${knownItemsActivity.jsonsHelpers.getAllRecipesCount(item)}"
             val allRecipesCount = knownItemsActivity.jsonsHelpers.getAllRecipesCount(item)
             if(allRecipesCount!=0)
