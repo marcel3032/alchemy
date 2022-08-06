@@ -42,10 +42,11 @@ class ChestItemAdapter(private val mainActivity: MainActivity, private val resou
         val item: Item? = getItem(position)
         if (item != null) {
             name.text = item.itemName
-            if(item.tool)
-                name.setTextColor(Color.parseColor("#06ad00"))
-            else
-                name.setTextColor(Color.parseColor("#000a91"))
+            when (item.tool) {
+                true -> name.setTextColor(Color.parseColor("#06ad00"))
+                false -> name.setTextColor(Color.parseColor("#000a91"))
+                else -> name.setTextColor(Color.parseColor("#8c0134"))
+            }
             image.setImageDrawable(mainActivity.getDrawable(item.drawableId))
         }
         return v

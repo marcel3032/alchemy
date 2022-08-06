@@ -1,7 +1,7 @@
 package sk.marcel.alchemy_app
 
 object Constants{
-    const val ITEM_ID_EXTRA = "item_id";
+    const val ITEM_ID_EXTRA = "item_id"
 
     private val indium = Item(1, "indium", false, R.drawable.ic_indium)
     private val kabel = Item(2, "kábel", false, R.drawable.ic_kabel)
@@ -24,6 +24,12 @@ object Constants{
     private val vlasy = Item(19, "vlasy", false, R.drawable.ic_vlasy)
     private val voda = Item(20, "voda", false, R.drawable.ic_voda)
     private val kefka = Item(21, "zubná kefka", false, R.drawable.ic_kefka)
+    private val akvarium = Item(22, "akvárium", false, R.drawable.ic_akvarium)
+
+    private val laser = Item(23, "laser", null, R.drawable.ic_laser)
+    private val dym = Item(24, "dym", null, R.drawable.ic_dym)
+    private val zrkadlo = Item(25, "zrkadlo", null, R.drawable.ic_mirror)
+
     private val lepidlo = Item(32, "lepidlo", true, R.drawable.ic_lepidlo)
     private val mikroskop = Item(33, "mikroskop", true, R.drawable.ic_mikroskop)
     private val noznice = Item(34, "nožnice", true, R.drawable.ic_noznice)
@@ -56,6 +62,12 @@ object Constants{
         Pair(19, vlasy),
         Pair(20, voda),
         Pair(21, kefka),
+        Pair(22, akvarium),
+
+        Pair(23, laser),
+        Pair(24, dym),
+        Pair(25, zrkadlo),
+
         Pair(32, lepidlo),
         Pair(33, mikroskop),
         Pair(34, noznice),
@@ -68,7 +80,38 @@ object Constants{
     )
 
     val recipes = mapOf(
-        Pair(1, Recipe(1, setOf(pajkovacka, kabel, kov), piliny))
+        Pair(1, Recipe(1, listOf(vifonka, sklo, topanka), tuzemak)),
+        Pair(2, Recipe(2, listOf(filter, filter, topanka), piesok)),
+        Pair(3, Recipe(3, listOf(voda, papier, topanka), vifonka)),
+        Pair(4, Recipe(4, listOf(med, kremik, mikroskop), plosak)),
+        Pair(5, Recipe(5, listOf(plosak, indium, mikroskop), laser)),
+        Pair(6, Recipe(6, listOf(mapaAzie, tuzemak, noznice), indium)),
+        Pair(7, Recipe(7, listOf(papier, vifonka, noznice), mapaAzie)),
+        Pair(8, Recipe(8, listOf(kefka, kefka, noznice), vlasy)),
+        Pair(9, Recipe(9, listOf(papier, vifonka, stetec), mapaAzie)),
+        Pair(10, Recipe(10, listOf(sklo, kov, stetec), zrkadlo)),
+        Pair(11, Recipe(11, listOf(plast, med, pajkovacka), plosak)),
+        Pair(12, Recipe(12, listOf(sklo, kov, pilnik), okuliare)),
+        Pair(13, Recipe(13, listOf(kov, kov, pilnik), piliny)),
+        Pair(14, Recipe(14, listOf(okuliare, kov, sroubovak), mikroskop)),
+        Pair(15, Recipe(15, listOf(lyzica, lyzica, sroubovak), noznice)),
+        Pair(16, Recipe(16, listOf(plast, lyzica, lepidlo), sroubovak)),
+        Pair(17, Recipe(17, listOf(lyzica, kabel, lepidlo), pajkovacka)),
+        Pair(18, Recipe(18, listOf(lyzica, vlasy, lepidlo), stetec)),
+        Pair(19, Recipe(19, listOf(sklo, sklo, lepidlo), akvarium)),
+        Pair(20, Recipe(20, listOf(piesok, kov, lepidlo), pilnik)),
+        Pair(21, Recipe(21, listOf(piesok, papier, lepidlo), pilnik)),
+        Pair(22, Recipe(22, listOf(kefka, kefka, teplo), plast)),
+        Pair(23, Recipe(23, listOf(filter, filter, teplo), med)),
+        Pair(24, Recipe(24, listOf(sklo, sklo, teplo), kremik)),
+        Pair(25, Recipe(25, listOf(plast, med, teplo), kabel)),
+        Pair(26, Recipe(26, listOf(plast, lyzica, teplo), sroubovak)),
+        Pair(27, Recipe(27, listOf(lyzica, lyzica, teplo), kov)),
+        Pair(28, Recipe(28, listOf(piesok, piesok, teplo), sklo)),
+        Pair(29, Recipe(29, listOf(voda, voda, teplo), para)),
+        Pair(30, Recipe(30, listOf(lyzica, vifonka, teplo), para)),
+        Pair(31, Recipe(31, listOf(voda, vifonka, teplo), lepidlo)),
+        Pair(32, Recipe(32, listOf(piliny, para, teplo), dym)),
     )
 
     const val MAX_ITEMS_IN_CHEST = 5

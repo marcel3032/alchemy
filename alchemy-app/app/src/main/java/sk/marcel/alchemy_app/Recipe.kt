@@ -1,6 +1,6 @@
 package sk.marcel.alchemy_app
 
-data class Recipe (val recipeId:Int, val items:Set<Item>, val result: Item):Comparable<Recipe>{
+data class Recipe (val recipeId:Int, val items:List<Item>, val result: Item):Comparable<Recipe>{
     companion object {
         fun getRecipeById(id:Int): Recipe? {
             return Constants.recipes[id]

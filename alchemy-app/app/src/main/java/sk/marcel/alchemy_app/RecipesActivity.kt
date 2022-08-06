@@ -15,7 +15,7 @@ class RecipesActivity : AppCompatActivity() {
         jsonsHelpers = JsonsHelpers(this)
 
         val itemId = intent.getIntExtra(Constants.ITEM_ID_EXTRA, -1)
-        findViewById<TextView>(R.id.title).text = "Recepty obsahujúce \"${Item.getItemById(itemId)?.itemName}\":"
+        findViewById<TextView>(R.id.title).text = "Známe recepty obsahujúce \"${Item.getItemById(itemId)?.itemName}\":"
         findViewById<ImageButton>(R.id.back_button).setOnClickListener { finish() }
 
         if(itemId!=-1) {
