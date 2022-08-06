@@ -3,11 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Marcel/UFOKSP/2021_22/ltt/alchemy/alchemy-app/app/src/main/res/drawable/ic_med.xml" value="0.2725" />
+        <entry key="..\:/Marcel/UFOKSP/2021_22/ltt/alchemy/alchemy-app/app/src/main/res/drawable/indium.xml" value="0.16" />
         <entry key="..\:/Marcel/UFOKSP/2021_22/ltt/alchemy/alchemy-app/app/src/main/res/layout/activity_known_items.xml" value="0.33" />
         <entry key="..\:/Marcel/UFOKSP/2021_22/ltt/alchemy/alchemy-app/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Marcel/UFOKSP/2021_22/ltt/alchemy/alchemy-app/app/src/main/res/layout/activity_recipes.xml" value="0.2677083333333333" />
         <entry key="..\:/Marcel/UFOKSP/2021_22/ltt/alchemy/alchemy-app/app/src/main/res/layout/chest_item_layout.xml" value="0.36041666666666666" />
         <entry key="..\:/Marcel/UFOKSP/2021_22/ltt/alchemy/alchemy-app/app/src/main/res/layout/item_layout.xml" value="0.22" />
         <entry key="..\:/Marcel/UFOKSP/2021_22/ltt/alchemy/alchemy-app/app/src/main/res/layout/known_item_layout.xml" value="0.3614583333333333" />
+        <entry key="..\:/Marcel/UFOKSP/2021_22/ltt/alchemy/alchemy-app/app/src/main/res/layout/recipe_layout.xml" value="0.26666666666666666" />
         <entry key="..\:/Marcel/UFOKSP/2021_22/ltt/alchemy/alchemy-app/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
       </map>
     </option>

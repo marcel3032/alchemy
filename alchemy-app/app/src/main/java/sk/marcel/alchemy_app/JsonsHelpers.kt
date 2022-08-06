@@ -100,12 +100,14 @@ class JsonsHelpers(activity: Context) {
     }
 
     fun getAllRecipesCount(item: Item): Int {
-        return Constants.recipes.values.count { recipe -> recipe.items.contains(item) }
+        return Constants.recipes.values.count { recipe -> recipe.items.contains(item) || recipe.result==item }
     }
 
     fun getKnownRecipesCount(itemId: Int): Int {
-        return Recipe.getRecipes(ArrayList(getKnownRecipes())).count { recipe -> recipe.items.map { item -> item.itemId }.contains(itemId) }
+        return Recipe.getRecipes(ArrayList(getKnownRecipes())).count { recipe -> recipe.items.map { item -> item.itemId }.contains(itemId) || recipe.result.itemId==itemId }
     }
 
-
+    fun getKnownRecipes(itemId: Int): List<Recipe> {
+        return Recipe.getRecipes(ArrayList(getKnownRecipes())).filter { recipe -> recipe.items.map { item -> item.itemId }.contains(itemId) || recipe.result.itemId==itemId }
+    }
 }

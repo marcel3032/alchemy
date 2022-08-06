@@ -24,19 +24,22 @@
             android:src="@drawable/ic_baseline_arrow_back"
             android:background="@color/float_transparent"/>
         <TextView
+            android:id="@+id/title"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:textAlignment="center"
             android:layout_gravity="center"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="50dp"
             android:layout_height="wrap_content"
             android:textSize="25sp"
             android:textStyle="bold"
-            android:text="Známe predmety: "/>
+            android:text="Recepty obsahujúce:"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <ListView
-        android:id="@+id/known_items"
+        android:id="@+id/known_recipes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"/>

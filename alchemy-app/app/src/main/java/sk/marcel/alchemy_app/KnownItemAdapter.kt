@@ -1,5 +1,6 @@
 package sk.marcel.alchemy_app
 
+import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -16,15 +17,19 @@ class KnownItemAdapter(private val knownItemsActivity: KnownItemsActivity, priva
         if (v == null) {
             v = LayoutInflater.from(knownItemsActivity).inflate(resourceLayout, parent, false)
         }
-        v!!.setOnClickListener {
-            // TODO display known recipes
-        }
-        val name = v.findViewById<TextView>(R.id.item_name)
+
+        val name = v!!.findViewById<TextView>(R.id.item_name)
         val image = v.findViewById<ImageView>(R.id.item_image)
         val progressText = v.findViewById<TextView>(R.id.progress_text)
         val progressBar = v.findViewById<ProgressBar>(R.id.progress_bar)
         val item: Item? = getItem(position)
         if (item != null) {
+            v.setOnClickListener {
+                val intent = Intent(knownItemsActivity, RecipesActivity::class.java)
+                intent.putExtra(Constants.ITEM_ID_EXTRA, item.itemId)
+                knownItemsActivity.startActivity(intent)
+            }
+
             name.text = item.itemName
             if(item.tool)
                 name.setTextColor(Color.parseColor("#06ad00"))
