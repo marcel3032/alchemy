@@ -1,5 +1,7 @@
 package sk.marcel.alchemy_app
 
+import android.graphics.Color
+
 data class Item (val itemId:Int, val itemName:String, val tool:Boolean?, val drawableId:Int):Comparable<Item>{
     companion object {
         fun getItemById(id:Int): Item? {
@@ -19,4 +21,11 @@ data class Item (val itemId:Int, val itemName:String, val tool:Boolean?, val dra
     override fun compareTo(other: Item): Int {
         return itemName.compareTo(other.itemName)
     }
+
+    fun getColor() =
+        when (tool) {
+            true -> Color.parseColor("#06ad00")
+            false -> Color.parseColor("#000a91")
+            else -> Color.parseColor("#8c0134")
+        }
 }
