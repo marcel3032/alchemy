@@ -80,7 +80,7 @@ class JsonsHelpers(activity: Context) {
     }
 
     fun writeKnownItems(items: List<Item>){
-        knownItemsFile.writeText(getItemsString(items.sorted()))
+        knownItemsFile.writeText(getItemsString(items.toSet().toList().sorted()))
     }
 
     private fun getItemsString(items: List<Item>):String{
@@ -93,7 +93,7 @@ class JsonsHelpers(activity: Context) {
 
     fun writeKnownRecipes(recipes: MutableList<Int>){
         val jsonToWrite = JSONArray()
-        for(recipe in recipes.sorted()){
+        for(recipe in recipes.toSet().toList().sorted()){
             jsonToWrite.put(recipe)
         }
         knownRecipesFile.writeText(jsonToWrite.toString())

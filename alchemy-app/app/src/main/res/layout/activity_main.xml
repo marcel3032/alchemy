@@ -33,8 +33,36 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:weightSum="2">
+
+
+        <CheckBox
+            android:layout_weight="1"
+            android:id="@+id/rw_z_karty"
+            android:layout_gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:text="RW z a na kartu" />
+
+        <Button
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:id="@+id/reset_files"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:text="Reset progress"/>
+
+    </LinearLayout>
+
     <TextView
         android:layout_gravity="center"
+        android:textSize="20sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Uschované veci: "/>
@@ -42,46 +70,7 @@
     <ListView
         android:id="@+id/stored_items"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical" />
-
-    <CheckBox
-        android:id="@+id/rw_z_karty"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="RW z a na kartu" />
-
-    <CheckBox
-        android:id="@+id/pridaj_na_kartu"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="(DEBUG)\nPridaj tote veci na kartu" />
-
-    <EditText
-        android:layout_gravity="center"
-        android:id="@+id/first"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <EditText
-        android:layout_gravity="center"
-        android:id="@+id/second"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <EditText
-        android:layout_gravity="center"
-        android:id="@+id/third"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:layout_gravity="center"
-        android:id="@+id/reset_files"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Reset progress"/>
 
 </LinearLayout>

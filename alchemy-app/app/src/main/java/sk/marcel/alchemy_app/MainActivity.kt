@@ -42,12 +42,7 @@ class MainActivity : AppCompatActivity() {
             if (NfcAdapter.ACTION_NDEF_DISCOVERED == intent.action || NfcAdapter.ACTION_TAG_DISCOVERED == intent.action || NfcAdapter.ACTION_TECH_DISCOVERED == intent.action) {
 
                 val res: Pair<List<Item?>?, List<Recipe>>?
-                if(findViewById<CheckBox>(R.id.pridaj_na_kartu).isChecked) {
-                    val first = Integer.parseInt(findViewById<EditText>(R.id.first).text.toString())
-                    val second = Integer.parseInt(findViewById<EditText>(R.id.second).text.toString())
-                    val third = Integer.parseInt(findViewById<EditText>(R.id.third).text.toString())
-                    res = NFC.readAndWriteItems(intent, listOf(Constants.items[first]!!, Constants.items[second]!!, Constants.items[third]!!), Int.MAX_VALUE)
-                } else if(findViewById<CheckBox>(R.id.rw_z_karty).isChecked) {
+                if(findViewById<CheckBox>(R.id.rw_z_karty).isChecked) {
                     val toWrite = ArrayList<Item>()
                     val chestItems = jsonsHelpers.getChestItems()
                     val chestItemAdapter = findViewById<ListView>(R.id.stored_items).adapter as ChestItemAdapter
@@ -58,7 +53,6 @@ class MainActivity : AppCompatActivity() {
                             chestItems.remove(chestItems[i])
                         }
                     }
-
                     res = NFC.readAndWriteItems(intent, toWrite, Constants.MAX_ITEMS_IN_CHEST - chestItems.size)
                     if(res?.first !=null)
                         jsonsHelpers.writeChestItems(chestItems)
@@ -87,8 +81,10 @@ class MainActivity : AppCompatActivity() {
                         jsonsHelpers.writeChestItems(chestItems)
                         jsonsHelpers.writeKnownItems(knownItems)
 
+                        val str = if(findViewById<CheckBox>(R.id.rw_z_karty).isChecked) "Zobraté:"
+                                  else "Na karte:"
                         SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-                            .setTitleText("Načítaná karta")
+                            .setTitleText(str)
                             .setContentText("$stringBuilder")
                             .show()
 

@@ -112,9 +112,17 @@ object Constants{
         Pair(30, Recipe(30, listOf(lyzica, vifonka, teplo), para)),
         Pair(31, Recipe(31, listOf(voda, vifonka, teplo), lepidlo)),
         Pair(32, Recipe(32, listOf(piliny, para, teplo), dym)),
+        Pair(33, Recipe(33, listOf(vifonka, vifonka, topanka), piesok)),
+        Pair(34, Recipe(34, listOf(kov, plast, lepidlo), kabel)),
+        Pair(35, Recipe(35, listOf(lyzica, piesok, lepidlo), kov)),
+        Pair(36, Recipe(36, listOf(kabel, piesok, lepidlo), kov)),
+        Pair(37, Recipe(37, listOf(sklo, voda, teplo), para)),
+        Pair(38, Recipe(38, listOf(plast, voda, teplo), para)),
+        Pair(39, Recipe(39, listOf(med, voda, teplo), para)),
+        Pair(40, Recipe(40, listOf(piesok, voda, teplo), para)),
     )
 
-    const val MAX_ITEMS_IN_CHEST = 5
+    const val MAX_ITEMS_IN_CHEST = 40
     const val maxItemsOnCard = 3
 
 }
