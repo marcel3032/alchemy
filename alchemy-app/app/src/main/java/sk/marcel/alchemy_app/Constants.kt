@@ -120,6 +120,7 @@ object Constants{
         Pair(38, Recipe(38, listOf(plast, voda, teplo), para)),
         Pair(39, Recipe(39, listOf(med, voda, teplo), para)),
         Pair(40, Recipe(40, listOf(piesok, voda, teplo), para)),
+        Pair(41, Recipe(41, listOf(filter, kefka, topanka), teplo)),
     )
 
     const val MAX_ITEMS_IN_CHEST = 40
